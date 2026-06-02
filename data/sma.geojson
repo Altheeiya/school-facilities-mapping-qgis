@@ -1,12 +1,679 @@
 {
   "type": "FeatureCollection",
   "name": "sma",
-  "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
   "features": [
-    { "type": "Feature", "properties": { "full_id": "n1668695489", "osm_id": "1668695489", "osm_type": "node", "amenity": "school", "website": null, "operator:type": null, "operator": null, "addr:neighbourhood": null, "addr:district": null, "grades": null, "religion": null, "addr:subdistrict": null, "addr:province": null, "addr:postcode": null, "addr:housename": null, "addr:city": null, "addr:street": null, "addr:housenumber": null, "name": "SMA Negeri 2 Tanjungkarang", "education": "school" }, "geometry": { "type": "Point", "coordinates": [ 105.2551145, -5.4263276 ] } },
-    { "type": "Feature", "properties": { "full_id": "n4585639190", "osm_id": "4585639190", "osm_type": "node", "amenity": "school", "website": null, "operator:type": null, "operator": null, "addr:neighbourhood": null, "addr:district": null, "grades": null, "religion": null, "addr:subdistrict": null, "addr:province": null, "addr:postcode": null, "addr:housename": null, "addr:city": null, "addr:street": "khairil anwar", "addr:housenumber": "105", "name": "Sma perintis 2 bandar lampunginin", "education": null }, "geometry": { "type": "Point", "coordinates": [ 105.2472523, -5.4176343 ] } },
-    { "type": "Feature", "properties": { "full_id": "n4601761797", "osm_id": "4601761797", "osm_type": "node", "amenity": "school", "website": null, "operator:type": null, "operator": null, "addr:neighbourhood": null, "addr:district": null, "grades": null, "religion": null, "addr:subdistrict": null, "addr:province": null, "addr:postcode": null, "addr:housename": null, "addr:city": null, "addr:street": "khairil anwar", "addr:housenumber": "105", "name": "Sma perimtis 2 bandar lampung kh", "education": null }, "geometry": { "type": "Point", "coordinates": [ 105.2460704, -5.4185177 ] } },
-    { "type": "Feature", "properties": { "full_id": "n12842038746", "osm_id": "12842038746", "osm_type": "node", "amenity": "school", "website": null, "operator:type": null, "operator": null, "addr:neighbourhood": null, "addr:district": null, "grades": null, "religion": null, "addr:subdistrict": null, "addr:province": null, "addr:postcode": null, "addr:housename": null, "addr:city": null, "addr:street": null, "addr:housenumber": null, "name": "anonymous opened 24 Mei 2023 SMA Negeri 5 Bandar Lampung", "education": null }, "geometry": { "type": "Point", "coordinates": [ 105.2847089, -5.3793738 ] } },
-    { "type": "Feature", "properties": { "full_id": "manual_sman1", "osm_id": null, "osm_type": "node", "amenity": "school", "website": null, "operator:type": null, "operator": null, "addr:neighbourhood": null, "addr:district": "Enggal", "grades": null, "religion": null, "addr:subdistrict": "Pahoman", "addr:province": "Lampung", "addr:postcode": "35118", "addr:housename": null, "addr:city": "Bandar Lampung", "addr:street": "Jl. Jend. Sudirman No.41", "addr:housenumber": null, "name": "SMAN 1 Bandar Lampung", "education": "school" }, "geometry": { "type": "Point", "coordinates": [ 105.265241, -5.422381 ] } }
+    {
+      "type": "Feature",
+      "properties": {
+        "full_id": "n1668695489",
+        "osm_id": "1668695489",
+        "osm_type": "node",
+        "amenity": "school",
+        "website": null,
+        "operator:type": null,
+        "operator": null,
+        "addr:neighbourhood": null,
+        "addr:district": null,
+        "grades": null,
+        "religion": null,
+        "addr:subdistrict": null,
+        "addr:province": null,
+        "addr:postcode": null,
+        "addr:housename": null,
+        "addr:city": null,
+        "addr:street": null,
+        "addr:housenumber": null,
+        "name": "SMA Negeri 2 Tanjungkarang",
+        "education": "school"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 105.2551145, -5.4263276 ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "full_id": "n4585639190",
+        "osm_id": "4585639190",
+        "osm_type": "node",
+        "amenity": "school",
+        "website": null,
+        "operator:type": null,
+        "operator": null,
+        "addr:neighbourhood": null,
+        "addr:district": null,
+        "grades": null,
+        "religion": null,
+        "addr:subdistrict": null,
+        "addr:province": null,
+        "addr:postcode": null,
+        "addr:housename": null,
+        "addr:city": null,
+        "addr:street": "khairil anwar",
+        "addr:housenumber": "105",
+        "name": "Sma perintis 2 bandar lampunginin",
+        "education": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 105.2472523, -5.4176343 ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "full_id": "n4601761797",
+        "osm_id": "4601761797",
+        "osm_type": "node",
+        "amenity": "school",
+        "website": null,
+        "operator:type": null,
+        "operator": null,
+        "addr:neighbourhood": null,
+        "addr:district": null,
+        "grades": null,
+        "religion": null,
+        "addr:subdistrict": null,
+        "addr:province": null,
+        "addr:postcode": null,
+        "addr:housename": null,
+        "addr:city": null,
+        "addr:street": "khairil anwar",
+        "addr:housenumber": "105",
+        "name": "Sma perimtis 2 bandar lampung kh",
+        "education": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 105.2460704, -5.4185177 ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "full_id": "n12842038746",
+        "osm_id": "12842038746",
+        "osm_type": "node",
+        "amenity": "school",
+        "website": null,
+        "operator:type": null,
+        "operator": null,
+        "addr:neighbourhood": null,
+        "addr:district": null,
+        "grades": null,
+        "religion": null,
+        "addr:subdistrict": null,
+        "addr:province": null,
+        "addr:postcode": null,
+        "addr:housename": null,
+        "addr:city": null,
+        "addr:street": null,
+        "addr:housenumber": null,
+        "name": "anonymous opened 24 Mei 2023 SMA Negeri 5 Bandar Lampung",
+        "education": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 105.2847089, -5.3793738 ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "full_id": "manual_sman1",
+        "osm_id": null,
+        "osm_type": "node",
+        "amenity": "school",
+        "website": null,
+        "operator:type": null,
+        "operator": null,
+        "addr:neighbourhood": null,
+        "addr:district": "Enggal",
+        "grades": null,
+        "religion": null,
+        "addr:subdistrict": "Pahoman",
+        "addr:province": "Lampung",
+        "addr:postcode": "35118",
+        "addr:housename": null,
+        "addr:city": "Bandar Lampung",
+        "addr:street": "Jl. Jend. Sudirman No.41",
+        "addr:housenumber": null,
+        "name": "SMAN 1 Bandar Lampung",
+        "education": "school"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 105.265241, -5.422381 ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "full_id": "manual_sman4",
+        "osm_id": null,
+        "osm_type": "node",
+        "amenity": "school",
+        "website": null,
+        "operator:type": null,
+        "operator": null,
+        "addr:neighbourhood": null,
+        "addr:district": "Enggal",
+        "grades": null,
+        "religion": null,
+        "addr:subdistrict": "Pahoman",
+        "addr:province": "Lampung",
+        "addr:postcode": "35118",
+        "addr:housename": null,
+        "addr:city": "Bandar Lampung",
+        "addr:street": "Jl. Jend. Sudirman No.41",
+        "addr:housenumber": null,
+        "name": "SMAN 4 BANDAR LAMPUNG",
+        "education": "school"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 105.2695, -5.4356 ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "full_id": "csv_10807069",
+        "osm_id": null,
+        "osm_type": "node",
+        "amenity": "school",
+        "website": null,
+        "operator:type": null,
+        "operator": null,
+        "addr:neighbourhood": null,
+        "addr:district": "Teluk Betung Selatan",
+        "grades": null,
+        "religion": null,
+        "addr:subdistrict": "Talang",
+        "addr:province": "Lampung",
+        "addr:postcode": null,
+        "addr:housename": null,
+        "addr:city": "Bandar Lampung",
+        "addr:street": "JL.LAKS MALAHAYATI NO. 10",
+        "addr:housenumber": null,
+        "name": "SMAN 8 BANDAR LAMPUNG",
+        "education": "school"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 105.2578, -5.4492 ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "full_id": "csv_10809706",
+        "osm_id": null,
+        "osm_type": "node",
+        "amenity": "school",
+        "website": null,
+        "operator:type": null,
+        "operator": null,
+        "addr:neighbourhood": null,
+        "addr:district": "Panjang",
+        "grades": null,
+        "religion": null,
+        "addr:subdistrict": "Pidada",
+        "addr:province": "Lampung",
+        "addr:postcode": null,
+        "addr:housename": null,
+        "addr:city": "Bandar Lampung",
+        "addr:street": "JL.SOEKARNO HATTA",
+        "addr:housenumber": null,
+        "name": "SMAN 17 BANDAR LAMPUNG",
+        "education": "school"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 105.3249, -5.4634 ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "full_id": "csv_10807067",
+        "osm_id": null,
+        "osm_type": "node",
+        "amenity": "school",
+        "website": null,
+        "operator:type": null,
+        "operator": null,
+        "addr:neighbourhood": null,
+        "addr:district": "Panjang",
+        "grades": null,
+        "religion": null,
+        "addr:subdistrict": "KETAPANG",
+        "addr:province": "Lampung",
+        "addr:postcode": null,
+        "addr:housename": null,
+        "addr:city": "Bandar Lampung",
+        "addr:street": "JL. KH. AGUS ANANG NO. 35",
+        "addr:housenumber": null,
+        "name": "SMAN 6 BANDAR LAMPUNG",
+        "education": "school"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 105.2964, -5.4387 ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "full_id": "csv_10807065",
+        "osm_id": null,
+        "osm_type": "node",
+        "amenity": "school",
+        "website": null,
+        "operator:type": null,
+        "operator": null,
+        "addr:neighbourhood": null,
+        "addr:district": "Teluk Betung Utara",
+        "grades": null,
+        "religion": null,
+        "addr:subdistrict": "Kupang Teba",
+        "addr:province": "Lampung",
+        "addr:postcode": null,
+        "addr:housename": null,
+        "addr:city": "Bandar Lampung",
+        "addr:street": "JL. DR. CIPTOMANGUNKUSUMO",
+        "addr:housenumber": null,
+        "name": "SMAN 4 BANDAR LAMPUNG",
+        "education": "school"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 105.2695, -5.4356 ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "full_id": "csv_10807063",
+        "osm_id": null,
+        "osm_type": "node",
+        "amenity": "school",
+        "website": null,
+        "operator:type": null,
+        "operator": null,
+        "addr:neighbourhood": null,
+        "addr:district": "Tanjung Karang Pusat",
+        "grades": null,
+        "religion": null,
+        "addr:subdistrict": "Gotong Royong",
+        "addr:province": "Lampung",
+        "addr:postcode": null,
+        "addr:housename": null,
+        "addr:city": "Bandar Lampung",
+        "addr:street": "JALAN AMIR HAMZAH NO. 01",
+        "addr:housenumber": null,
+        "name": "SMAN 2 BANDAR LAMPUNG",
+        "education": "school"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 105.2549, -5.4266 ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "full_id": "csv_10807064",
+        "osm_id": null,
+        "osm_type": "node",
+        "amenity": "school",
+        "website": null,
+        "operator:type": null,
+        "operator": null,
+        "addr:neighbourhood": null,
+        "addr:district": "Tanjung Karang Pusat",
+        "grades": null,
+        "religion": null,
+        "addr:subdistrict": "Durian Payung",
+        "addr:province": "Lampung",
+        "addr:postcode": null,
+        "addr:housename": null,
+        "addr:city": "Bandar Lampung",
+        "addr:street": "JL. KHAIRIL ANWAR NO. 30",
+        "addr:housenumber": null,
+        "name": "SMAN 3 BANDAR LAMPUNG",
+        "education": "school"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 105.2443, -5.4198 ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "full_id": "csv_10807062",
+        "osm_id": null,
+        "osm_type": "node",
+        "amenity": "school",
+        "website": null,
+        "operator:type": null,
+        "operator": null,
+        "addr:neighbourhood": null,
+        "addr:district": "Tanjung Karang Barat",
+        "grades": null,
+        "religion": null,
+        "addr:subdistrict": "Susunan Baru",
+        "addr:province": "Lampung",
+        "addr:postcode": null,
+        "addr:housename": null,
+        "addr:city": "Bandar Lampung",
+        "addr:street": "JL.DARUSSALAM",
+        "addr:housenumber": null,
+        "name": "SMAN 16 BANDAR LAMPUNG",
+        "education": "school"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 105.2292, -5.4026 ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "full_id": "csv_10807070",
+        "osm_id": null,
+        "osm_type": "node",
+        "amenity": "school",
+        "website": null,
+        "operator:type": null,
+        "operator": null,
+        "addr:neighbourhood": null,
+        "addr:district": "Tanjung Karang Barat",
+        "grades": null,
+        "religion": null,
+        "addr:subdistrict": "Segala Mider",
+        "addr:province": "Lampung",
+        "addr:postcode": null,
+        "addr:housename": null,
+        "addr:city": "Bandar Lampung",
+        "addr:street": "JL. PANGLIMA POLIM NO. 18",
+        "addr:housenumber": null,
+        "name": "SMAN 9 BANDAR LAMPUNG",
+        "education": "school"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 105.2482, -5.3906 ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "full_id": "csv_10807058",
+        "osm_id": null,
+        "osm_type": "node",
+        "amenity": "school",
+        "website": null,
+        "operator:type": null,
+        "operator": null,
+        "addr:neighbourhood": null,
+        "addr:district": "Sukarame",
+        "grades": null,
+        "religion": null,
+        "addr:subdistrict": "Sukarame",
+        "addr:province": "Lampung",
+        "addr:postcode": null,
+        "addr:housename": null,
+        "addr:city": "Bandar Lampung",
+        "addr:street": "JL. LETK. HENDRO SURATMIN",
+        "addr:housenumber": null,
+        "name": "SMAN 12 BANDAR LAMPUNG",
+        "education": "school"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 105.3016, -5.3817 ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "full_id": "csv_10807066",
+        "osm_id": null,
+        "osm_type": "node",
+        "amenity": "school",
+        "website": null,
+        "operator:type": null,
+        "operator": null,
+        "addr:neighbourhood": null,
+        "addr:district": "Sukarame",
+        "grades": null,
+        "religion": null,
+        "addr:subdistrict": "WAY DADI BARU",
+        "addr:province": "Lampung",
+        "addr:postcode": null,
+        "addr:housename": null,
+        "addr:city": "Bandar Lampung",
+        "addr:street": "Jl. Soekarno-Hatta (By Pass)",
+        "addr:housenumber": null,
+        "name": "SMAN 5 BANDAR LAMPUNG",
+        "education": "school"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 105.2847, -5.3796 ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "full_id": "csv_10807060",
+        "osm_id": null,
+        "osm_type": "node",
+        "amenity": "school",
+        "website": null,
+        "operator:type": null,
+        "operator": null,
+        "addr:neighbourhood": null,
+        "addr:district": "Kemiling",
+        "grades": null,
+        "religion": null,
+        "addr:subdistrict": "KEMILING PERMAI",
+        "addr:province": "Lampung",
+        "addr:postcode": null,
+        "addr:housename": null,
+        "addr:city": "Bandar Lampung",
+        "addr:street": "BUKIT KEMILING PERMAI",
+        "addr:housenumber": null,
+        "name": "SMAN 14 BANDAR LAMPUNG",
+        "education": "school"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 105.2126, -5.3802 ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "full_id": "csv_10807068",
+        "osm_id": null,
+        "osm_type": "node",
+        "amenity": "school",
+        "website": null,
+        "operator:type": null,
+        "operator": null,
+        "addr:neighbourhood": null,
+        "addr:district": "Kemiling",
+        "grades": null,
+        "religion": null,
+        "addr:subdistrict": "BERINGIN JAYA",
+        "addr:province": "Lampung",
+        "addr:postcode": null,
+        "addr:housename": null,
+        "addr:city": "Bandar Lampung",
+        "addr:street": "Jl. Teuku Cik Ditiro, No. 02",
+        "addr:housenumber": null,
+        "name": "SMAN 7 BANDAR LAMPUNG",
+        "education": "school"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 105.2013, -5.4041 ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "full_id": "csv_10807059",
+        "osm_id": null,
+        "osm_type": "node",
+        "amenity": "school",
+        "website": null,
+        "operator:type": null,
+        "operator": null,
+        "addr:neighbourhood": null,
+        "addr:district": "Rajabasa",
+        "grades": null,
+        "religion": null,
+        "addr:subdistrict": "Rajabasa Jaya",
+        "addr:province": "Lampung",
+        "addr:postcode": null,
+        "addr:housename": null,
+        "addr:city": "Bandar Lampung",
+        "addr:street": "JL. PADAT KARYA SINAR HARAPAN",
+        "addr:housenumber": null,
+        "name": "SMAN 13 BANDAR LAMPUNG",
+        "education": "school"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 105.2561, -5.3466 ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "full_id": "csv_10807061",
+        "osm_id": null,
+        "osm_type": "node",
+        "amenity": "school",
+        "website": null,
+        "operator:type": null,
+        "operator": null,
+        "addr:neighbourhood": null,
+        "addr:district": "Tanjung Senang",
+        "grades": null,
+        "religion": null,
+        "addr:subdistrict": "Labuhan Dalam",
+        "addr:province": "Lampung",
+        "addr:postcode": null,
+        "addr:housename": null,
+        "addr:city": "Bandar Lampung",
+        "addr:street": "JL. TURI RAYA",
+        "addr:housenumber": null,
+        "name": "SMAN 15 BANDAR LAMPUNG",
+        "education": "school"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 105.2679, -5.3603 ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "full_id": "csv_10807021",
+        "osm_id": null,
+        "osm_type": "node",
+        "amenity": "school",
+        "website": null,
+        "operator:type": null,
+        "operator": null,
+        "addr:neighbourhood": null,
+        "addr:district": "Kedamaian",
+        "grades": null,
+        "religion": null,
+        "addr:subdistrict": "Tanjung Gading",
+        "addr:province": "Lampung",
+        "addr:postcode": null,
+        "addr:housename": null,
+        "addr:city": "Bandar Lampung",
+        "addr:street": "JL. GATOT SUBROTO No. 81",
+        "addr:housenumber": null,
+        "name": "SMA N 10 BANDAR LAMPUNG",
+        "education": "school"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 105.2762, -5.4287 ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "full_id": "csv_10807020",
+        "osm_id": null,
+        "osm_type": "node",
+        "amenity": "school",
+        "website": null,
+        "operator:type": null,
+        "operator": null,
+        "addr:neighbourhood": null,
+        "addr:district": "Enggal",
+        "grades": null,
+        "religion": null,
+        "addr:subdistrict": "Enggal",
+        "addr:province": "Lampung",
+        "addr:postcode": null,
+        "addr:housename": null,
+        "addr:city": "Bandar Lampung",
+        "addr:street": "JL. JENDERAL SUDIRMAN NO. 41",
+        "addr:housenumber": null,
+        "name": "SMA N 1 BANDAR LAMPUNG",
+        "education": "school"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 105.265241, -5.422381 ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "full_id": "csv_10807040",
+        "osm_id": null,
+        "osm_type": "node",
+        "amenity": "school",
+        "website": null,
+        "operator:type": null,
+        "operator": null,
+        "addr:neighbourhood": null,
+        "addr:district": "Teluk Betung Timur",
+        "grades": null,
+        "religion": null,
+        "addr:subdistrict": "Sukamaju",
+        "addr:province": "Lampung",
+        "addr:postcode": null,
+        "addr:housename": null,
+        "addr:city": "Bandar Lampung",
+        "addr:street": "JL. RE. MARTADINATA KM. 4 SUKAMAJU",
+        "addr:housenumber": null,
+        "name": "SMAN 11 BANDAR LAMPUNG",
+        "education": "school"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 105.2432, -5.4726 ]
+      }
+    }
   ]
 }

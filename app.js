@@ -31,6 +31,9 @@ let layerHijau = L.layerGroup();
 let layerKuning = L.layerGroup();
 let layerMerah = L.layerGroup();
 
+// Menyimpan semua fitur sekolah untuk pencarian
+let allSchools = [];
+
 // =======================
 // HELPER AUTO-DETEKSI ATRIBUT NAMA
 // =======================
@@ -122,6 +125,14 @@ fetch('data/sma.geojson')
         pointToLayer: function(feature, latlng){
             const nama = getFeatureName(feature.properties);
             buatAksesibilitasSekolah(latlng, nama);
+            
+            // Tambahkan ke array pencarian
+            allSchools.push({
+                name: nama,
+                lat: latlng.lat,
+                lng: latlng.lng,
+                type: 'SMA'
+            });
 
             return L.circleMarker(latlng, {
                 radius: 6,
@@ -150,6 +161,14 @@ fetch('data/smk.geojson')
         pointToLayer: function(feature, latlng){
             const nama = getFeatureName(feature.properties);
             buatAksesibilitasSekolah(latlng, nama);
+            
+            // Tambahkan ke array pencarian
+            allSchools.push({
+                name: nama,
+                lat: latlng.lat,
+                lng: latlng.lng,
+                type: 'SMK'
+            });
 
             return L.circleMarker(latlng, {
                 radius: 6,
@@ -244,4 +263,45 @@ function initializeLayers(){
         const group = L.featureGroup(groupLayers);
         map.fitBounds(group.getBounds());
     }
+}
+
+// =======================
+// SEARCH FUNCTIONALITY
+// =======================
+function handleSearch() {
+    const searchInput = document.getElementById('search-input').value.toLowerCase().trim();
+    const resultsContainer = document.getElementById('search-results');
+    
+    if (searchInput.length === 0) {
+        resultsContainer.classList.remove('show');
+        resultsContainer.innerHTML = '';
+        return;
+    }
+    
+    const results = allSchools.filter(school => 
+        school.name.toLowerCase().includes(searchInput)
+    );
+    
+    if (results.length === 0) {
+        resultsContainer.innerHTML = '<div class="search-result-item">Tidak ada hasil</div>';
+        resultsContainer.classList.add('show');
+        return;
+    }
+    
+    resultsContainer.innerHTML = results.map(school => 
+        `<div class="search-result-item" onclick="centerMapToSchool(${school.lat}, ${school.lng}, '${school.name}')">${school.name}</div>`
+    ).join('');
+    resultsContainer.classList.add('show');
+}
+
+function centerMapToSchool(lat, lng, name) {
+    map.setView([lat, lng], 16);
+    
+    const popup = L.popup()
+        .setLatLng([lat, lng])
+        .setContent(`<b>${name}</b>`)
+        .openOn(map);
+    
+    document.getElementById('search-results').classList.remove('show');
+    document.getElementById('search-input').value = '';
 }
