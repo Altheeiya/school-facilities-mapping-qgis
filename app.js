@@ -1,7 +1,18 @@
 // =======================
-// INISIALISASI MAP
+// INISIALISASI MAP & PANES (Kunci Utama Urutan Layer)
 // =======================
 const map = L.map('map').setView([-5.429, 105.261], 12);
+
+// Buat custom pane untuk mengontrol penumpukan poligon dan titik
+map.createPane('kecamatanPane');
+map.getPane('kecamatanPane').style.zIndex = 400; // Paling Bawah
+
+map.createPane('isochronePane');
+map.getPane('isochronePane').style.zIndex = 450; // Di Tengah (Aksesibilitas ORS)
+
+map.createPane('titikSekolahPane');
+map.getPane('titikSekolahPane').style.zIndex = 650; // Paling Atas (Marker Bulat)
+map.getPane('titikSekolahPane').style.pointerEvents = 'auto'; // Pastikan bisa diklik
 
 // =======================
 // BASE LAYERS
@@ -19,17 +30,16 @@ const satellite = L.tileLayer(
 osm.addTo(map);
 
 // =======================
-// LAYER VARIABLES
+// LAYER VARIABLES & GROUPS
 // =======================
 let smaLayer;
-let smkLayer;
 let kecamatanLayer;
 let bufferLayer;
 
-// Pisahkan grup layer untuk masing-masing warna aksesibilitas
-let layerHijau = L.layerGroup();
-let layerKuning = L.layerGroup();
-let layerMerah = L.layerGroup();
+// Grup layer untuk masing-masing warna aksesibilitas
+const layerHijau = L.layerGroup().addTo(map);
+const layerKuning = L.layerGroup().addTo(map);
+const layerMerah = L.layerGroup().addTo(map);
 
 // =======================
 // HELPER AUTO-DETEKSI ATRIBUT NAMA
@@ -54,66 +64,76 @@ function styleKecamatan(feature){
     const nilai = feature.properties ? (feature.properties.nilai_pemerataan || 0) : 0;
     return {
         fillColor: getColor(nilai),
-        weight: 2,
-        color: '#333',
-        fillOpacity: 0.7
+        weight: 1.5,
+        color: '#666',
+        fillOpacity: 0.4, // Dikurangi sedikit agar tembus pandang
+        pane: 'kecamatanPane' // Terikat di pane bawah
     };
 }
 
 // =======================
-// LAYER AKSESIBILITAS DI SEKITAR SEKOLAH
+// LAYER AKSESIBILITAS DI SEKITAR SEKOLAH (DINAMIS - ORS)
 // =======================
-function buatAksesibilitasSekolah(latlng, namaSekolah) {
-    // 1. Zona Merah (Radius 3 km)
-    const merah = L.circle(latlng, {
-        radius: 3000,
-        fillColor: 'red',
-        color: 'red',
-        weight: 1,
-        fillOpacity: 0.12
-    }).bindPopup(`<b>${namaSekolah}</b><br>Zona Merah: Aksesibilitas Rendah (> 2km)`);
+const ORS_API_KEY = 'eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6ImQ4NjkxMWE0MDU4OTQzMzk4NDJjNTcwZjYxYmM1MzRiIiwiaCI6Im11cm11cjY0In0=';
 
-    // 2. Zona Kuning (Radius 2 km)
-    const kuning = L.circle(latlng, {
-        radius: 2000,
-        fillColor: 'yellow',
-        color: 'orange',
-        weight: 1,
-        fillOpacity: 0.18
-    }).bindPopup(`<b>${namaSekolah}</b><br>Zona Kuning: Aksesibilitas Sedang (1km - 2km)`);
+function buatAksesbilitasDinamis(lat, lng, namaSekolah) {
+    const url = `https://api.openrouteservice.org/v2/isochrones/driving-car`;
+    const batasanWaktu = [180, 360, 600]; // 3 Menit, 6 Menit, 10 Menit
 
-    // 3. Zona Hijau (Radius 1 km)
-    const hijau = L.circle(latlng, {
-        radius: 1000,
-        fillColor: 'green',
-        color: 'green',
-        weight: 1,
-        fillOpacity: 0.25
-    }).bindPopup(`<b>${namaSekolah}</b><br>Zona Hijau: Mudah Diakses (0km - 1km)`);
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': ORS_API_KEY
+        },
+        body: JSON.stringify({
+            locations: [[lng, lat]], 
+            range: batasanWaktu,
+            range_type: 'time',
+            smoothing: 3.0
+        })
+    })
+    .then(response => {
+        if (!response.ok) throw new Error("Gagal merespon API ORS");
+        return response.json();
+    })
+    .then(data => {
+        // Balik urutan agar poligon terbesar (merah) digambar duluan/paling bawah
+        data.features.reverse();
 
-    // Masukkan ke grup masing-masing warna
-    merah.addTo(layerMerah);
-    kuning.addTo(layerKuning);
-    hijau.addTo(layerHijau);
+        L.geoJSON(data, {
+            style: function(feature) {
+                const value = feature.properties.value; 
+                if (value <= 180) {
+                    return { color: '#28a745', fillColor: '#28a745', fillOpacity: 0.45, weight: 1.5, pane: 'isochronePane' };
+                } else if (value <= 360) {
+                    return { color: '#ffc107', fillColor: '#ffc107', fillOpacity: 0.30, weight: 1.5, pane: 'isochronePane' };
+                } else {
+                    return { color: '#dc3545', fillColor: '#dc3545', fillOpacity: 0.15, weight: 1.5, pane: 'isochronePane' };
+                }
+            },
+            onEachFeature: function(feature, layer) {
+                const value = feature.properties.value;
+                let menit = value / 60;
+                let keterangan = `Zona Jangkauan: ${menit} Menit Berkendara`;
+                layer.bindPopup(`<b>${namaSekolah}</b><br>${keterangan}`);
+
+                // Masukkan ke grup masing-masing kontrol UI
+                if (value <= 180) {
+                    layer.addTo(layerHijau);
+                } else if (value <= 360) {
+                    layer.addTo(layerKuning);
+                } else {
+                    layer.addTo(layerMerah);
+                }
+            }
+        });
+    })
+    .catch(err => console.error(`Gagal memuat jangkauan untuk ${namaSekolah}:`, err));
 }
 
 // =======================
-// EVENT LISTENER TOMBOL CENTANG (INDEX.PHP)
-// =======================
-document.getElementById('chk-hijau').addEventListener('change', function(e) {
-    if(e.target.checked) { map.addLayer(layerHijau); } else { map.removeLayer(layerHijau); }
-});
-
-document.getElementById('chk-kuning').addEventListener('change', function(e) {
-    if(e.target.checked) { map.addLayer(layerKuning); } else { map.removeLayer(layerKuning); }
-});
-
-document.getElementById('chk-merah').addEventListener('change', function(e) {
-    if(e.target.checked) { map.addLayer(layerMerah); } else { map.removeLayer(layerMerah); }
-});
-
-// =======================
-// LOAD SMA
+// LOAD DATA SMA
 // =======================
 fetch('data/sma.geojson')
 .then(res => res.json())
@@ -121,14 +141,17 @@ fetch('data/sma.geojson')
     smaLayer = L.geoJSON(data, {
         pointToLayer: function(feature, latlng){
             const nama = getFeatureName(feature.properties);
-            buatAksesibilitasSekolah(latlng, nama);
+            
+            // Trigger API Jangkauan ORS
+            buatAksesbilitasDinamis(latlng.lat, latlng.lng, nama);
 
             return L.circleMarker(latlng, {
                 radius: 6,
-                fillColor: 'blue',
+                fillColor: '#0056b3',
                 color: '#fff',
-                weight: 1,
-                fillOpacity: 1
+                weight: 1.5,
+                fillOpacity: 1,
+                pane: 'titikSekolahPane' // Dipaksa berada di urutan paling atas
             });
         },
         onEachFeature: function(feature, layer){
@@ -141,35 +164,7 @@ fetch('data/sma.geojson')
 });
 
 // =======================
-// LOAD SMK
-// =======================
-fetch('data/smk.geojson')
-.then(res => res.json())
-.then(data => {
-    smkLayer = L.geoJSON(data, {
-        pointToLayer: function(feature, latlng){
-            const nama = getFeatureName(feature.properties);
-            buatAksesibilitasSekolah(latlng, nama);
-
-            return L.circleMarker(latlng, {
-                radius: 6,
-                fillColor: 'red',
-                color: '#fff',
-                weight: 1,
-                fillOpacity: 1
-            });
-        },
-        onEachFeature: function(feature, layer){
-            const namaSekolah = getFeatureName(feature.properties);
-            layer.bindPopup(`<b>${namaSekolah}</b><br>Kategori: SMK`);
-        }
-    });
-    smkLayer.addTo(map);
-    initializeLayers();
-}).catch(err => console.log("Data SMK tidak ditemukan."));
-
-// =======================
-// LOAD KECAMATAN
+// LOAD DATA KECAMATAN
 // =======================
 fetch('data/kecamatan.geojson')
 .then(res => res.json())
@@ -193,14 +188,14 @@ fetch('data/kecamatan.geojson')
 });
 
 // =======================
-// LOAD BUFFER
+// LOAD DATA BUFFER
 // =======================
 fetch('data/buffer.geojson')
 .then(res => res.json())
 .then(data => {
     if(data && data.features){
         bufferLayer = L.geoJSON(data, {
-            style:{ color:'orange', weight:2, fillOpacity:0.2 }
+            style:{ color:'orange', weight:2, fillOpacity:0.15, pane: 'kecamatanPane' }
         });
     }
     initializeLayers();
@@ -208,6 +203,21 @@ fetch('data/buffer.geojson')
 .catch(err => {
     console.error("Gagal memuat data Buffer:", err);
     initializeLayers();
+});
+
+// =======================
+// EVENT LISTENER TOMBOL CENTANG (PETA.PHP)
+// =======================
+document.getElementById('chk-hijau').addEventListener('change', function(e) {
+    if(e.target.checked) { map.addLayer(layerHijau); } else { map.removeLayer(layerHijau); }
+});
+
+document.getElementById('chk-kuning').addEventListener('change', function(e) {
+    if(e.target.checked) { map.addLayer(layerKuning); } else { map.removeLayer(layerKuning); }
+});
+
+document.getElementById('chk-merah').addEventListener('change', function(e) {
+    if(e.target.checked) { map.addLayer(layerMerah); } else { map.removeLayer(layerMerah); }
 });
 
 // =======================
@@ -229,19 +239,13 @@ function initializeLayers(){
     const groupLayers = [];
 
     if (smaLayer) { overlayMaps["Titik SMA"] = smaLayer; groupLayers.push(smaLayer); }
-    if (smkLayer) { overlayMaps["Titik SMK"] = smkLayer; groupLayers.push(smkLayer); }
     if (kecamatanLayer) { overlayMaps["Batas Kecamatan"] = kecamatanLayer; groupLayers.push(kecamatanLayer); }
-    if (bufferLayer) { overlayMaps["Radius Zonasi"] = bufferLayer; }
+    if (bufferLayer) { overlayMaps["Radius Zonasi 3KM"] = bufferLayer; }
     
-    // Tampilkan semua layer aksesibilitas secara default di awal map load
-    layerMerah.addTo(map);
-    layerKuning.addTo(map);
-    layerHijau.addTo(map);
-
     layerControl = L.control.layers(baseMaps, overlayMaps, { collapsed: false }).addTo(map);
 
-    if (groupLayers.length > 0) {
-        const group = L.featureGroup(groupLayers);
-        map.fitBounds(group.getBounds());
+    // Auto-center peta jika layer utama telah termuat
+    if (groupLayers.length > 0 && smaLayer) {
+        map.fitBounds(smaLayer.getBounds());
     }
 }
