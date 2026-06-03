@@ -72,6 +72,72 @@ function styleKecamatan(feature){
 }
 
 // =======================
+// LOGIKA PENCARIAN SEKOLAH (AUTOCOMPLETE TENGAH ATAS)
+// =======================
+const searchInput = document.getElementById('search-sekolah');
+const searchResults = document.getElementById('search-results');
+
+searchInput.addEventListener('input', function(e) {
+    const keyword = e.target.value.toLowerCase().trim();
+    searchResults.innerHTML = '';
+    
+    if (keyword === '') {
+        searchResults.classList.add('hidden');
+        return;
+    }
+
+    let cocok = 0;
+
+    if (smaLayer) {
+        smaLayer.eachLayer(function(layer) {
+            const properties = layer.feature.properties;
+            const namaSekolah = getFeatureName(properties);
+            
+            if (namaSekolah.toLowerCase().includes(keyword)) {
+                cocok++;
+                const item = document.createElement('div');
+                item.className = 'px-4 py-2.5 hover:bg-blue-50 cursor-pointer border-b border-gray-100 transition last:border-0 font-medium text-gray-700 text-xs md:text-sm';
+                item.textContent = namaSekolah;
+                
+                // Aksi saat item hasil pencarian diklik
+                item.addEventListener('click', function() {
+                    searchInput.value = namaSekolah;
+                    searchResults.classList.add('hidden');
+                    
+                    // Terbang ke koordinat sekolah, beri zoom level 16
+                    const latlng = layer.getLatLng();
+                    map.flyTo(latlng, 16, { animate: true, duration: 1.5 });
+                    
+                    // Tunggu animasi selesai, lalu buka Popup informasi sekolah
+                    setTimeout(() => {
+                        layer.openPopup();
+                    }, 1500);
+                });
+                
+                searchResults.appendChild(item);
+            }
+        });
+    }
+
+    if (cocok > 0) {
+        searchResults.classList.remove('hidden');
+    } else {
+        const noResult = document.createElement('div');
+        noResult.className = 'p-3 text-gray-400 italic text-center text-xs';
+        noResult.textContent = 'Sekolah tidak ditemukan';
+        searchResults.appendChild(noResult);
+        searchResults.classList.remove('hidden');
+    }
+});
+
+// Tutup menu drop-down pencarian jika pengguna mengklik area luar komponen pencarian
+document.addEventListener('click', function(e) {
+    if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+        searchResults.classList.add('hidden');
+    }
+});
+
+// =======================
 // LAYER AKSESIBILITAS DI SEKITAR SEKOLAH (DINAMIS - ORS)
 // =======================
 const ORS_API_KEY = 'eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6ImQ4NjkxMWE0MDU4OTQzMzk4NDJjNTcwZjYxYmM1MzRiIiwiaCI6Im11cm11cjY0In0=';
