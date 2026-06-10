@@ -1,72 +1,183 @@
 <?php include 'includes/header.php'; ?>
 
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1">
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900 tracking-tight flex items-center">
-            <i class="fa-solid fa-chart-line text-blue-600 mr-3"></i> Metodologi & Parameter Analisis Spasial
+<!-- ===== ANALYSIS PAGE ===== -->
+<main class="analisis-page" id="analisis-page">
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>
+            <div class="icon-badge"><i class="fa-solid fa-chart-line"></i></div>
+            Metodologi &amp; Parameter Spasial
         </h1>
-        <p class="text-gray-600 mt-1">Dokumentasi teknis pengolahan Sistem Informasi Geografis fasilitas pendidikan SMA Kota Bandar Lampung.</p>
+        <p>Dokumentasi teknis pengolahan Sistem Informasi Geografis fasilitas pendidikan SMA Kota Bandar Lampung.</p>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200 lg:col-span-2 space-y-6">
-            <div>
-                <h3 class="text-lg font-bold text-gray-900 mb-2 flex items-center">
-                    <i class="fa-solid fa-route text-green-600 mr-2"></i> Analisis Jangkauan Jalan (Isochrone Network Analysis)
-                </h3>
-                <p class="text-sm text-gray-600 leading-relaxed">
+    <!-- Content Grid -->
+    <div class="analisis-grid" id="analisis-grid">
+
+        <!-- Main Content Card -->
+        <div class="glass-card analisis-main" id="analisis-main">
+
+            <!-- Section 1: Isochrone -->
+            <div class="a-section" id="section-isochrone">
+                <div class="a-section-title">
+                    <div class="ti green"><i class="fa-solid fa-route"></i></div>
+                    Analisis Jangkauan Jalan (Isochrone Network)
+                </div>
+                <p>
                     Sistem ini tidak menggunakan radius lingkaran statis "garis lurus udara" biasa, melainkan menerapkan pemodelan analisis jaringan jalan aktual via <strong>OpenRouteService API</strong>. Poligon area mencerminkan jangkauan riil kendaraan roda empat/dua dalam batasan variasi waktu:
                 </p>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                    <div class="p-3 bg-green-50 border border-green-200 rounded-lg">
-                        <span class="font-bold text-green-700 text-sm">Zona 3 Menit</span>
-                        <p class="text-xs text-gray-500 mt-1">Aksesibilitas sangat tinggi/mudah di sekitar pemukiman sekolah.</p>
+
+                <!-- Zona Badges -->
+                <div class="zona-grid" id="zona-grid">
+                    <div class="zona-card g" id="zona-3">
+                        <div class="zona-card-title">
+                            <i class="fa-solid fa-circle-check"></i> Zona 3 Menit
+                        </div>
+                        <p>Aksesibilitas sangat tinggi / mudah di sekitar pemukiman sekolah.</p>
                     </div>
-                    <div class="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                        <span class="font-bold text-yellow-700 text-sm">Zona 6 Menit</span>
-                        <p class="text-xs text-gray-500 mt-1">Aksesibilitas sedang, menjangkau perimeter sub-kelurahan terdekat.</p>
+                    <div class="zona-card y" id="zona-6">
+                        <div class="zona-card-title">
+                            <i class="fa-solid fa-circle-half-stroke"></i> Zona 6 Menit
+                        </div>
+                        <p>Aksesibilitas sedang, menjangkau perimeter sub-kelurahan terdekat.</p>
                     </div>
-                    <div class="p-3 bg-red-50 border border-red-200 rounded-lg">
-                        <span class="font-bold text-red-700 text-sm">Zona 10 Menit</span>
-                        <p class="text-xs text-gray-500 mt-1">Batas ambang aksesibilitas rendah bagi jangkauan harian pelajar.</p>
+                    <div class="zona-card r" id="zona-10">
+                        <div class="zona-card-title">
+                            <i class="fa-solid fa-circle-xmark"></i> Zona 10 Menit
+                        </div>
+                        <p>Batas ambang aksesibilitas rendah bagi jangkauan harian pelajar.</p>
                     </div>
                 </div>
             </div>
 
-            <div class="pt-6 border-t border-gray-100">
-                <h3 class="text-lg font-bold text-gray-900 mb-2 flex items-center">
-                    <i class="fa-solid fa-shapes text-orange-500 mr-2"></i> Buffer Analisis Tetap
-                </h3>
-                <p class="text-sm text-gray-600 leading-relaxed">
-                    Selain jangkauan waktu jalan dinamis, sistem memuat representasi spasial berkas <code>buffer.geojson</code> dengan radius penyangga seluas 3000 meter untuk mengevaluasi konsentrasi cakupan administratif wilayah pendidikan.
+            <hr class="a-divider">
+
+            <!-- Section 2: Buffer -->
+            <div class="a-section" id="section-buffer">
+                <div class="a-section-title">
+                    <div class="ti amber"><i class="fa-solid fa-shapes"></i></div>
+                    Buffer Analisis Tetap
+                </div>
+                <p>
+                    Selain jangkauan waktu jalan dinamis, sistem memuat representasi spasial berkas <code>buffer.geojson</code> dengan radius penyangga seluas <strong>3000 meter</strong> untuk mengevaluasi konsentrasi cakupan administratif wilayah pendidikan.
                 </p>
             </div>
-        </div>
 
-        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200 h-fit space-y-4">
-            <h3 class="text-md font-bold text-gray-900 border-b pb-2 flex items-center">
-                <i class="fa-solid fa-circle-check text-blue-600 mr-2"></i> Integritas Data Spasial
-            </h3>
-            <div class="space-y-3">
-                <div class="p-2.5 bg-gray-50 rounded-lg text-xs">
-                    <span class="font-semibold text-gray-500 block">Sistem Koordinat (CRS)</span>
-                    <span class="font-bold text-gray-800 text-sm">WGS 84 / EPSG:4326</span>
+            <hr class="a-divider">
+
+            <!-- Section 3: Statistik Dashboard -->
+            <div class="a-section" id="section-statistik">
+                <div class="a-section-title">
+                    <div class="ti blue" style="background: var(--rb-50); color: var(--accent); border: 1px solid var(--glass-border);"><i class="fa-solid fa-chart-pie"></i></div>
+                    Dashboard Statistik Sekolah
                 </div>
-                <div class="p-2.5 bg-gray-50 rounded-lg text-xs">
-                    <span class="font-semibold text-gray-500 block">Sampel Entitas Valid</span>
-                    <span class="font-bold text-gray-800 text-sm">71 Titik Koordinat SMA</span>
-                </div>
-                <div class="p-2.5 bg-gray-50 rounded-lg text-xs">
-                    <span class="font-semibold text-gray-500 block">Kategori Filter Utama</span>
-                    <span class="font-bold text-gray-800 text-sm">SMA Negeri & Swasta</span>
+                <p>
+                    Distribusi jumlah sekolah menengah atas di Kota Bandar Lampung berdasarkan tipe kepemilikan (Negeri/Swasta) dan sebaran per wilayah.
+                </p>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px;">
+                    <div class="glass-card" style="padding: 20px; background: #fff;">
+                        <h4 style="text-align: center; font-size: 0.85rem; font-weight: 800; color: var(--text-primary); margin-bottom: 16px;">Proporsi Status Sekolah</h4>
+                        <canvas id="chartStatus" width="400" height="300"></canvas>
+                    </div>
+                    <div class="glass-card" style="padding: 20px; background: #fff;">
+                        <h4 style="text-align: center; font-size: 0.85rem; font-weight: 800; color: var(--text-primary); margin-bottom: 16px;">Top 10 Wilayah Terbanyak</h4>
+                        <canvas id="chartWilayah" width="400" height="300"></canvas>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
 
-<footer class="bg-gray-800 text-white py-6 mt-auto text-center text-sm">
+        </div>
+
+        <!-- Sidebar: Data Integrity -->
+        <div class="glass-card analisis-sidebar" id="analisis-sidebar">
+            <div class="sidebar-title">
+                <i class="fa-solid fa-shield-halved"></i>
+                Integritas Data
+            </div>
+
+            <div class="data-row" id="data-crs">
+                <div class="dr-label">Sistem Koordinat (CRS)</div>
+                <div class="dr-val">WGS 84 / EPSG:4326</div>
+            </div>
+
+            <div class="data-row" id="data-sampel">
+                <div class="dr-label">Sampel Valid</div>
+                <div class="dr-val">71 Titik SMA</div>
+            </div>
+
+            <div class="data-row" id="data-kategori">
+                <div class="dr-label">Kategori Filter</div>
+                <div class="dr-val">SMA Negeri &amp; Swasta</div>
+            </div>
+
+            <div class="data-row" id="data-api">
+                <div class="dr-label">API Isokron</div>
+                <div class="dr-val">OpenRouteService v2</div>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer class="site-footer" id="analisis-footer">
     <p>&copy; 2026 WebGIS Pemetaan SMA Bandar Lampung. All Rights Reserved.</p>
 </footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    fetch('api/api_statistik.php')
+        .then(response => response.json())
+        .then(data => {
+            if(data.status === 'success') {
+                // Render Chart Status
+                const statusCtx = document.getElementById('chartStatus').getContext('2d');
+                const statusLabels = data.data.sekolah_berdasarkan_status.map(item => item.status.toUpperCase());
+                const statusCounts = data.data.sekolah_berdasarkan_status.map(item => parseInt(item.total));
+                
+                new Chart(statusCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: statusLabels,
+                        datasets: [{
+                            data: statusCounts,
+                            backgroundColor: ['#2176c8', '#16a34a', '#d97706'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+                });
+
+                // Render Chart Wilayah
+                const wilayahCtx = document.getElementById('chartWilayah').getContext('2d');
+                const wilayahLabels = data.data.sekolah_berdasarkan_wilayah.map(item => item.wilayah);
+                const wilayahCounts = data.data.sekolah_berdasarkan_wilayah.map(item => parseInt(item.total));
+                
+                new Chart(wilayahCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: wilayahLabels,
+                        datasets: [{
+                            label: 'Jumlah Sekolah',
+                            data: wilayahCounts,
+                            backgroundColor: '#2176c8',
+                            borderRadius: 4
+                        }]
+                    },
+                    options: { 
+                        responsive: true, 
+                        plugins: { legend: { display: false } },
+                        scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+                    }
+                });
+            }
+        })
+        .catch(error => console.error('Error fetching statistics:', error));
+});
+</script>
+
 </body>
 </html>

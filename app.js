@@ -96,7 +96,7 @@ searchInput.addEventListener('input', function(e) {
             if (namaSekolah.toLowerCase().includes(keyword)) {
                 cocok++;
                 const item = document.createElement('div');
-                item.className = 'px-4 py-2.5 hover:bg-blue-50 cursor-pointer border-b border-gray-100 transition last:border-0 font-medium text-gray-700 text-xs md:text-sm';
+                item.className = 'search-result-item';
                 item.textContent = namaSekolah;
                 
                 // Aksi saat item hasil pencarian diklik
@@ -123,7 +123,7 @@ searchInput.addEventListener('input', function(e) {
         searchResults.classList.remove('hidden');
     } else {
         const noResult = document.createElement('div');
-        noResult.className = 'p-3 text-gray-400 italic text-center text-xs';
+        noResult.className = 'search-no-result';
         noResult.textContent = 'Sekolah tidak ditemukan';
         searchResults.appendChild(noResult);
         searchResults.classList.remove('hidden');
@@ -198,12 +198,46 @@ function buatAksesbilitasDinamis(lat, lng, namaSekolah) {
     .catch(err => console.error(`Gagal memuat jangkauan untuk ${namaSekolah}:`, err));
 }
 
+let allSekolahData = null; // Store fetched data for filtering
+
+// =======================
+// FILTER SEKOLAH EVENT LISTENER
+// =======================
+const filterRadios = document.querySelectorAll('input[name="filter-status"]');
+filterRadios.forEach(radio => {
+    radio.addEventListener('change', function(e) {
+        if (!allSekolahData) return;
+        
+        const statusVal = e.target.value; // 'all', 'public', 'private'
+        
+        // Clear existing points
+        smaLayer.clearLayers();
+        
+        // Filter features
+        const filteredFeatures = allSekolahData.features.filter(feature => {
+            if (statusVal === 'all') return true;
+            // Coalesce operator:type if missing
+            const type = feature.properties['operator:type'] || 'unknown';
+            return type.toLowerCase() === statusVal;
+        });
+        
+        const filteredData = {
+            type: 'FeatureCollection',
+            features: filteredFeatures
+        };
+        
+        // Add filtered points back
+        smaLayer.addData(filteredData);
+    });
+});
+
 // =======================
 // LOAD DATA SMA
 // =======================
 fetch('api/api_sekolah.php')
 .then(res => res.json())
 .then(data => {
+    allSekolahData = data; // Save globally
     smaLayer = L.geoJSON(data, {
         pointToLayer: function(feature, latlng){
             const nama = getFeatureName(feature.properties);
@@ -213,7 +247,7 @@ fetch('api/api_sekolah.php')
 
             return L.circleMarker(latlng, {
                 radius: 6,
-                fillColor: '#0056b3',
+                fillColor: '#1560aa', // Resistance Blue primary
                 color: '#fff',
                 weight: 1.5,
                 fillOpacity: 1,
@@ -222,7 +256,8 @@ fetch('api/api_sekolah.php')
         },
         onEachFeature: function(feature, layer){
             const namaSekolah = getFeatureName(feature.properties);
-            layer.bindPopup(`<b>${namaSekolah}</b><br>Kategori: SMA`);
+            const statusType = feature.properties['operator:type'] || 'Umum';
+            layer.bindPopup(`<b>${namaSekolah}</b><br>Kategori: SMA ${statusType}`);
         }
     });
     smaLayer.addTo(map);

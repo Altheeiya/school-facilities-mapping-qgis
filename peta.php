@@ -1,50 +1,82 @@
 <?php include 'includes/header.php'; ?>
 
-<div class="flex-1 relative flex flex-col h-[calc(100vh-64px)] overflow-hidden">
-    
-    <div class="absolute top-4 left-1/2 -translate-x-1/2 z-[1000] w-full max-w-md px-4">
-        <div class="bg-white rounded-xl shadow-xl border border-gray-200 p-2 flex flex-col relative">
-            <div class="relative flex items-center">
-                <input type="text" id="search-sekolah" placeholder="Cari nama SMA di Bandar Lampung..." 
-                       class="w-full pl-9 pr-4 py-2 bg-gray-50 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition">
-                <i class="fa-solid fa-magnifying-glass absolute left-3 text-gray-400 text-sm"></i>
-            </div>
-            <div id="search-results" class="hidden absolute left-0 right-0 top-full mt-2 mx-4 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto text-sm z-[2000]"></div>
+<!-- ===== MAP PAGE WRAPPER ===== -->
+<div class="map-page" id="map-page-wrapper">
+
+    <!-- Search Bar Overlay -->
+    <div class="map-search" id="map-search-container">
+        <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input
+                type="text"
+                id="search-sekolah"
+                placeholder="Cari nama SMA di Bandar Lampung..."
+                autocomplete="off"
+                aria-label="Cari nama sekolah"
+            >
         </div>
+        <div id="search-results" class="hidden"></div>
     </div>
 
-    <div class="absolute top-24 left-4 z-[1000] bg-white rounded-xl shadow-lg p-5 w-64 border border-gray-200 flex flex-col max-h-[calc(100vh-120px)]">
-        <h4 class="font-bold text-gray-900 mb-2 text-sm flex items-center">
-            <i class="fa-solid fa-sliders text-blue-600 mr-2"></i> Aksesibilitas Sekolah
-        </h4>
-        <p class="text-[11px] text-gray-400 mb-3">Zona jangkauan waktu berkendara (ORS)</p>
-        
-        <div class="space-y-2.5 flex-1 overflow-y-auto">
-            <label class="flex items-center p-1.5 rounded hover:bg-gray-50 cursor-pointer transition">
-                <input type="checkbox" id="chk-hijau" checked class="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500">
-                <span class="w-3 h-3 rounded-full bg-green-600 ml-3 mr-2"></span>
-                <span class="text-xs text-gray-700 font-medium">Mudah (&le; 3 Menit)</span>
-            </label>
-            
-            <label class="flex items-center p-1.5 rounded hover:bg-gray-50 cursor-pointer transition">
-                <input type="checkbox" id="chk-kuning" checked class="w-4 h-4 text-yellow-500 border-gray-300 rounded focus:ring-yellow-400">
-                <span class="w-3 h-3 rounded-full bg-yellow-400 border border-yellow-600 ml-3 mr-2"></span>
-                <span class="text-xs text-gray-700 font-medium">Sedang (&le; 6 Menit)</span>
-            </label>
-            
-            <label class="flex items-center p-1.5 rounded hover:bg-gray-50 cursor-pointer transition">
-                <input type="checkbox" id="chk-merah" checked class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500">
-                <span class="w-3 h-3 rounded-full bg-red-600 ml-3 mr-2"></span>
-                <span class="text-xs text-gray-700 font-medium">Rendah (&le; 10 Menit)</span>
-            </label>
+    <!-- Legend Panel -->
+    <aside class="map-legend" id="map-legend" aria-label="Legenda peta aksesibilitas">
+        <div class="legend-head">
+            <i class="fa-solid fa-sliders"></i>
+            Aksesibilitas
         </div>
-        
-        <div class="mt-4 pt-3 border-t border-gray-100 text-[11px] text-gray-400">
-            <i class="fa-solid fa-circle-info mr-1"></i> Titik biru melambangkan fasilitas SMA. Batas wilayah merupakan poligon kecamatan.
-        </div>
-    </div>
+        <p class="legend-sub">Zona jangkauan berkendara (ORS)</p>
 
-    <div id="map" class="w-full h-full"></div>
+        <label class="legend-row" for="chk-hijau">
+            <input type="checkbox" id="chk-hijau" checked>
+            <span class="ldot g"></span>
+            <span class="legend-lbl">Mudah (&le; 3 Menit)</span>
+        </label>
+
+        <label class="legend-row" for="chk-kuning">
+            <input type="checkbox" id="chk-kuning" checked>
+            <span class="ldot y"></span>
+            <span class="legend-lbl">Sedang (&le; 6 Menit)</span>
+        </label>
+
+        <label class="legend-row" for="chk-merah">
+            <input type="checkbox" id="chk-merah" checked>
+            <span class="ldot r"></span>
+            <span class="legend-lbl">Rendah (&le; 10 Menit)</span>
+        </label>
+
+        <hr class="legend-hr">
+
+        <p class="legend-note">
+            <i class="fa-solid fa-circle-info" style="margin-right:4px;"></i>
+            Titik = SMA. Area = batas kecamatan.
+        </p>
+    </aside>
+
+    <!-- Filter Panel -->
+    <aside class="map-legend" id="map-filter" aria-label="Filter Data Sekolah" style="top: 310px;">
+        <div class="legend-head">
+            <i class="fa-solid fa-filter"></i>
+            Filter Sekolah
+        </div>
+        <p class="legend-sub">Pilih status sekolah</p>
+
+        <label class="legend-row" for="filter-semua">
+            <input type="radio" name="filter-status" id="filter-semua" value="all" checked>
+            <span class="legend-lbl">Semua Sekolah</span>
+        </label>
+        <label class="legend-row" for="filter-negeri">
+            <input type="radio" name="filter-status" id="filter-negeri" value="public">
+            <span class="legend-lbl">SMA Negeri</span>
+        </label>
+        <label class="legend-row" for="filter-swasta">
+            <input type="radio" name="filter-status" id="filter-swasta" value="private">
+            <span class="legend-lbl">SMA Swasta</span>
+        </label>
+    </aside>
+
+    <!-- Leaflet Map -->
+    <div id="map" aria-label="Peta interaktif sebaran SMA Bandar Lampung"></div>
+
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
