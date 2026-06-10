@@ -201,7 +201,7 @@ function buatAksesbilitasDinamis(lat, lng, namaSekolah) {
 // =======================
 // LOAD DATA SMA
 // =======================
-fetch('data/sma.geojson')
+fetch('api/api_sekolah.php')
 .then(res => res.json())
 .then(data => {
     smaLayer = L.geoJSON(data, {
