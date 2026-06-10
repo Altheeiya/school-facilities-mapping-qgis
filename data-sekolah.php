@@ -4,7 +4,7 @@
     $host = 'localhost';
     $dbname = 'db_sig_sma';
     $user = 'postgres';
-    $pass = 'password_anda_disini'; // <-- UBAH DENGAN PASSWORD POSTGRESQL ANDA
+    $pass = 'Farhan22.'; // Password PostgreSQL
 
     try {
         $pdo = new PDO("pgsql:host=$host;dbname=$dbname", $user, $pass);
