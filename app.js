@@ -199,16 +199,26 @@ function buatAksesbilitasDinamis(lat, lng, namaSekolah) {
 }
 
 // =======================
-// LOAD DATA SMA
+// LOAD DATA SMA (dari PostgreSQL via API)
 // =======================
 fetch('api/api_sekolah.php')
-.then(res => res.json())
+.then(res => {
+    if (!res.ok) throw new Error('Gagal memanggil API: HTTP ' + res.status);
+    return res.json();
+})
 .then(data => {
+    // Jika API mengembalikan error dari PHP (koneksi DB gagal, dll)
+    if (data.error) {
+        console.error('API Error:', data.error);
+        alert('Gagal memuat data sekolah.\nError: ' + data.error);
+        return;
+    }
+
     smaLayer = L.geoJSON(data, {
         pointToLayer: function(feature, latlng){
             const nama = getFeatureName(feature.properties);
-            
-            // Trigger API Jangkauan ORS
+
+            // Trigger zona aksesibilitas ORS
             buatAksesbilitasDinamis(latlng.lat, latlng.lng, nama);
 
             return L.circleMarker(latlng, {
@@ -217,41 +227,35 @@ fetch('api/api_sekolah.php')
                 color: '#fff',
                 weight: 1.5,
                 fillOpacity: 1,
-                pane: 'titikSekolahPane' // Dipaksa berada di urutan paling atas
+                pane: 'titikSekolahPane'
             });
         },
         onEachFeature: function(feature, layer){
-            const namaSekolah = getFeatureName(feature.properties);
-            layer.bindPopup(`<b>${namaSekolah}</b><br>Kategori: SMA`);
+            const p = feature.properties;
+            const namaSekolah = getFeatureName(p);
+            const kota = p['addr:city'] || 'Bandar Lampung';
+            const jalan = p['addr:street'] ? `<br>Jalan: ${p['addr:street']}` : '';
+            layer.bindPopup(`<b>${namaSekolah}</b><br>Kota: ${kota}${jalan}`);
         }
     });
     smaLayer.addTo(map);
-    initializeLayers();
-});
 
-// =======================
-// LOAD DATA KECAMATAN
-// =======================
-fetch('data/kecamatan.geojson')
-.then(res => res.json())
-.then(data => {
-    if(data && data.features){
-        kecamatanLayer = L.geoJSON(data, {
-            style: styleKecamatan,
-            onEachFeature: function(feature, layer){
-                const namaKec = getFeatureName(feature.properties);
-                const nilai = feature.properties ? (feature.properties.nilai_pemerataan || '-') : '-';
-                layer.bindPopup(`<b>Wilayah: ${namaKec}</b><br>Nilai Pemerataan: ${nilai}`);
-            }
-        });
-        kecamatanLayer.addTo(map);
+    // Inisialisasi layer control setelah data sekolah siap
+    try {
+        initializeLayers();
+    } catch(e) {
+        console.warn('initializeLayers error (tidak fatal):', e);
     }
-    initializeLayers();
 })
 .catch(err => {
-    console.error("Gagal memuat data Kecamatan:", err);
-    initializeLayers(); 
+    // Hanya error jaringan / HTTP yang sampai sini
+    console.error('Fetch error api_sekolah.php:', err);
+    alert('Gagal terhubung ke server.\nPastikan Laragon aktif dan PostgreSQL berjalan.\nDetail: ' + err.message);
 });
+
+// Catatan: Tabel kecamatan tidak tersedia di database.
+// Panggil initializeLayers() agar layer control awal bisa tampil.
+initializeLayers();
 
 // =======================
 // LOAD DATA BUFFER
