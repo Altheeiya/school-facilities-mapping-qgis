@@ -72,17 +72,19 @@ function styleKecamatan(feature){
 }
 
 // =======================
-// LOGIKA PENCARIAN SEKOLAH (AUTOCOMPLETE TENGAH ATAS)
+// LOGIKA PENCARIAN SEKOLAH
 // =======================
-const searchInput = document.getElementById('search-sekolah');
+const searchInput   = document.getElementById('search-sekolah');
 const searchResults = document.getElementById('search-results');
+const searchClear   = document.getElementById('search-clear');
 
 searchInput.addEventListener('input', function(e) {
     const keyword = e.target.value.toLowerCase().trim();
     searchResults.innerHTML = '';
-    
+    searchClear.style.display = keyword ? 'block' : 'none';
+
     if (keyword === '') {
-        searchResults.classList.add('hidden');
+        searchResults.classList.remove('open');
         return;
     }
 
@@ -92,48 +94,52 @@ searchInput.addEventListener('input', function(e) {
         smaLayer.eachLayer(function(layer) {
             const properties = layer.feature.properties;
             const namaSekolah = getFeatureName(properties);
-            
+
             if (namaSekolah.toLowerCase().includes(keyword)) {
                 cocok++;
                 const item = document.createElement('div');
-                item.className = 'px-4 py-2.5 hover:bg-blue-50 cursor-pointer border-b border-gray-100 transition last:border-0 font-medium text-gray-700 text-xs md:text-sm';
-                item.textContent = namaSekolah;
-                
-                // Aksi saat item hasil pencarian diklik
+                item.className = 'map-search-item';
+                item.innerHTML = `<i class="fa-solid fa-location-dot" style="color:var(--primary);font-size:11px;"></i>${namaSekolah}`;
+
                 item.addEventListener('click', function() {
                     searchInput.value = namaSekolah;
-                    searchResults.classList.add('hidden');
-                    
-                    // Terbang ke koordinat sekolah, beri zoom level 16
+                    searchClear.style.display = 'block';
+                    searchResults.classList.remove('open');
+
                     const latlng = layer.getLatLng();
                     map.flyTo(latlng, 16, { animate: true, duration: 1.5 });
-                    
-                    // Tunggu animasi selesai, lalu buka Popup informasi sekolah
-                    setTimeout(() => {
-                        layer.openPopup();
-                    }, 1500);
+                    setTimeout(() => { layer.openPopup(); }, 1500);
                 });
-                
+
                 searchResults.appendChild(item);
             }
         });
     }
 
     if (cocok > 0) {
-        searchResults.classList.remove('hidden');
+        searchResults.classList.add('open');
     } else {
         const noResult = document.createElement('div');
-        noResult.className = 'p-3 text-gray-400 italic text-center text-xs';
+        noResult.className = 'map-search-item';
+        noResult.style.color = 'var(--gray-400)';
+        noResult.style.fontStyle = 'italic';
         noResult.textContent = 'Sekolah tidak ditemukan';
         searchResults.appendChild(noResult);
-        searchResults.classList.remove('hidden');
+        searchResults.classList.add('open');
     }
 });
 
-// Tutup menu drop-down pencarian jika pengguna mengklik area luar komponen pencarian
+searchClear.addEventListener('click', function() {
+    searchInput.value = '';
+    searchResults.innerHTML = '';
+    searchResults.classList.remove('open');
+    searchClear.style.display = 'none';
+    searchInput.focus();
+});
+
 document.addEventListener('click', function(e) {
     if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
-        searchResults.classList.add('hidden');
+        searchResults.classList.remove('open');
     }
 });
 
@@ -276,19 +282,33 @@ fetch('data/buffer.geojson')
 });
 
 // =======================
-// EVENT LISTENER TOMBOL CENTANG (PETA.PHP)
+// EVENT LISTENER LEGEND CHECKBOXES
 // =======================
-document.getElementById('chk-hijau').addEventListener('change', function(e) {
-    if(e.target.checked) { map.addLayer(layerHijau); } else { map.removeLayer(layerHijau); }
-});
-
-document.getElementById('chk-kuning').addEventListener('change', function(e) {
-    if(e.target.checked) { map.addLayer(layerKuning); } else { map.removeLayer(layerKuning); }
-});
-
-document.getElementById('chk-merah').addEventListener('change', function(e) {
-    if(e.target.checked) { map.addLayer(layerMerah); } else { map.removeLayer(layerMerah); }
-});
+function toggleZone(chkId, iconId, layer) {
+    const chk  = document.getElementById(chkId);
+    const icon = document.getElementById(iconId);
+    if (!chk) return;
+    chk.addEventListener('change', function() {
+        if (this.checked) {
+            map.addLayer(layer);
+            if (icon) icon.style.opacity = '1';
+        } else {
+            map.removeLayer(layer);
+            if (icon) icon.style.opacity = '0.2';
+        }
+    });
+    // Klik label legend juga toggle
+    const label = chk.closest('.legend-item');
+    if (label) {
+        label.addEventListener('click', () => {
+            chk.checked = !chk.checked;
+            chk.dispatchEvent(new Event('change'));
+        });
+    }
+}
+toggleZone('chk-hijau',  'icon-hijau',  layerHijau);
+toggleZone('chk-kuning', 'icon-kuning', layerKuning);
+toggleZone('chk-merah',  'icon-merah',  layerMerah);
 
 // =======================
 // LAYER CONTROL & AUTO CENTER
