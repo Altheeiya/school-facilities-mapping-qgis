@@ -7,9 +7,19 @@ $current_page = basename($_SERVER['PHP_SELF']);
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>WebGIS SMA Bandar Lampung — Pemerataan Aksesibilitas Pendidikan</title>
-  <meta name="description" content="Sistem Informasi Geografis pemetaan sebaran dan aksesibilitas Sekolah Menengah Atas (SMA) di Kota Bandar Lampung menggunakan analisis isokron waktu tempuh.">
+  <meta name="description" content="Platform WebGIS enterprise untuk analisis pemerataan aksesibilitas Sekolah Menengah Atas (SMA) di Kota Bandar Lampung — sebaran spasial, isokron waktu tempuh, dan distribusi 70 sekolah berbasis PostGIS.">
+  <meta name="theme-color" content="#0B1120">
+  <meta property="og:title" content="WebGIS SMA Bandar Lampung">
+  <meta property="og:description" content="Platform pemetaan sebaran dan aksesibilitas SMA di Bandar Lampung berbasis analisis jaringan jalan.">
+  <meta property="og:type" content="website">
+  <!-- Preconnect -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- App CSS -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
