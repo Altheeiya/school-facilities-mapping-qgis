@@ -72,19 +72,17 @@ function styleKecamatan(feature){
 }
 
 // =======================
-// LOGIKA PENCARIAN SEKOLAH
+// LOGIKA PENCARIAN SEKOLAH (AUTOCOMPLETE TENGAH ATAS)
 // =======================
-const searchInput   = document.getElementById('search-sekolah');
+const searchInput = document.getElementById('search-sekolah');
 const searchResults = document.getElementById('search-results');
-const searchClear   = document.getElementById('search-clear');
 
 searchInput.addEventListener('input', function(e) {
     const keyword = e.target.value.toLowerCase().trim();
     searchResults.innerHTML = '';
-    searchClear.style.display = keyword ? 'block' : 'none';
-
+    
     if (keyword === '') {
-        searchResults.classList.remove('open');
+        searchResults.classList.add('hidden');
         return;
     }
 
@@ -94,52 +92,48 @@ searchInput.addEventListener('input', function(e) {
         smaLayer.eachLayer(function(layer) {
             const properties = layer.feature.properties;
             const namaSekolah = getFeatureName(properties);
-
+            
             if (namaSekolah.toLowerCase().includes(keyword)) {
                 cocok++;
                 const item = document.createElement('div');
-                item.className = 'map-search-item';
-                item.innerHTML = `<i class="fa-solid fa-location-dot" style="color:var(--primary);font-size:11px;"></i>${namaSekolah}`;
-
+                item.className = 'px-4 py-2.5 hover:bg-blue-50 cursor-pointer border-b border-gray-100 transition last:border-0 font-medium text-gray-700 text-xs md:text-sm';
+                item.textContent = namaSekolah;
+                
+                // Aksi saat item hasil pencarian diklik
                 item.addEventListener('click', function() {
                     searchInput.value = namaSekolah;
-                    searchClear.style.display = 'block';
-                    searchResults.classList.remove('open');
-
+                    searchResults.classList.add('hidden');
+                    
+                    // Terbang ke koordinat sekolah, beri zoom level 16
                     const latlng = layer.getLatLng();
                     map.flyTo(latlng, 16, { animate: true, duration: 1.5 });
-                    setTimeout(() => { layer.openPopup(); }, 1500);
+                    
+                    // Tunggu animasi selesai, lalu buka Popup informasi sekolah
+                    setTimeout(() => {
+                        layer.openPopup();
+                    }, 1500);
                 });
-
+                
                 searchResults.appendChild(item);
             }
         });
     }
 
     if (cocok > 0) {
-        searchResults.classList.add('open');
+        searchResults.classList.remove('hidden');
     } else {
         const noResult = document.createElement('div');
-        noResult.className = 'map-search-item';
-        noResult.style.color = 'var(--gray-400)';
-        noResult.style.fontStyle = 'italic';
+        noResult.className = 'p-3 text-gray-400 italic text-center text-xs';
         noResult.textContent = 'Sekolah tidak ditemukan';
         searchResults.appendChild(noResult);
-        searchResults.classList.add('open');
+        searchResults.classList.remove('hidden');
     }
 });
 
-searchClear.addEventListener('click', function() {
-    searchInput.value = '';
-    searchResults.innerHTML = '';
-    searchResults.classList.remove('open');
-    searchClear.style.display = 'none';
-    searchInput.focus();
-});
-
+// Tutup menu drop-down pencarian jika pengguna mengklik area luar komponen pencarian
 document.addEventListener('click', function(e) {
     if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
-        searchResults.classList.remove('open');
+        searchResults.classList.add('hidden');
     }
 });
 
@@ -205,26 +199,16 @@ function buatAksesbilitasDinamis(lat, lng, namaSekolah) {
 }
 
 // =======================
-// LOAD DATA SMA (dari PostgreSQL via API)
+// LOAD DATA SMA
 // =======================
 fetch('api/api_sekolah.php')
-.then(res => {
-    if (!res.ok) throw new Error('Gagal memanggil API: HTTP ' + res.status);
-    return res.json();
-})
+.then(res => res.json())
 .then(data => {
-    // Jika API mengembalikan error dari PHP (koneksi DB gagal, dll)
-    if (data.error) {
-        console.error('API Error:', data.error);
-        alert('Gagal memuat data sekolah.\nError: ' + data.error);
-        return;
-    }
-
     smaLayer = L.geoJSON(data, {
         pointToLayer: function(feature, latlng){
             const nama = getFeatureName(feature.properties);
-
-            // Trigger zona aksesibilitas ORS
+            
+            // Trigger API Jangkauan ORS
             buatAksesbilitasDinamis(latlng.lat, latlng.lng, nama);
 
             return L.circleMarker(latlng, {
@@ -233,35 +217,41 @@ fetch('api/api_sekolah.php')
                 color: '#fff',
                 weight: 1.5,
                 fillOpacity: 1,
-                pane: 'titikSekolahPane'
+                pane: 'titikSekolahPane' // Dipaksa berada di urutan paling atas
             });
         },
         onEachFeature: function(feature, layer){
-            const p = feature.properties;
-            const namaSekolah = getFeatureName(p);
-            const kota = p['addr:city'] || 'Bandar Lampung';
-            const jalan = p['addr:street'] ? `<br>Jalan: ${p['addr:street']}` : '';
-            layer.bindPopup(`<b>${namaSekolah}</b><br>Kota: ${kota}${jalan}`);
+            const namaSekolah = getFeatureName(feature.properties);
+            layer.bindPopup(`<b>${namaSekolah}</b><br>Kategori: SMA`);
         }
     });
     smaLayer.addTo(map);
-
-    // Inisialisasi layer control setelah data sekolah siap
-    try {
-        initializeLayers();
-    } catch(e) {
-        console.warn('initializeLayers error (tidak fatal):', e);
-    }
-})
-.catch(err => {
-    // Hanya error jaringan / HTTP yang sampai sini
-    console.error('Fetch error api_sekolah.php:', err);
-    alert('Gagal terhubung ke server.\nPastikan Laragon aktif dan PostgreSQL berjalan.\nDetail: ' + err.message);
+    initializeLayers();
 });
 
-// Catatan: Tabel kecamatan tidak tersedia di database.
-// Panggil initializeLayers() agar layer control awal bisa tampil.
-initializeLayers();
+// =======================
+// LOAD DATA KECAMATAN
+// =======================
+fetch('data/kecamatan.geojson')
+.then(res => res.json())
+.then(data => {
+    if(data && data.features){
+        kecamatanLayer = L.geoJSON(data, {
+            style: styleKecamatan,
+            onEachFeature: function(feature, layer){
+                const namaKec = getFeatureName(feature.properties);
+                const nilai = feature.properties ? (feature.properties.nilai_pemerataan || '-') : '-';
+                layer.bindPopup(`<b>Wilayah: ${namaKec}</b><br>Nilai Pemerataan: ${nilai}`);
+            }
+        });
+        kecamatanLayer.addTo(map);
+    }
+    initializeLayers();
+})
+.catch(err => {
+    console.error("Gagal memuat data Kecamatan:", err);
+    initializeLayers(); 
+});
 
 // =======================
 // LOAD DATA BUFFER
@@ -282,33 +272,19 @@ fetch('data/buffer.geojson')
 });
 
 // =======================
-// EVENT LISTENER LEGEND CHECKBOXES
+// EVENT LISTENER TOMBOL CENTANG (PETA.PHP)
 // =======================
-function toggleZone(chkId, iconId, layer) {
-    const chk  = document.getElementById(chkId);
-    const icon = document.getElementById(iconId);
-    if (!chk) return;
-    chk.addEventListener('change', function() {
-        if (this.checked) {
-            map.addLayer(layer);
-            if (icon) icon.style.opacity = '1';
-        } else {
-            map.removeLayer(layer);
-            if (icon) icon.style.opacity = '0.2';
-        }
-    });
-    // Klik label legend juga toggle
-    const label = chk.closest('.legend-item');
-    if (label) {
-        label.addEventListener('click', () => {
-            chk.checked = !chk.checked;
-            chk.dispatchEvent(new Event('change'));
-        });
-    }
-}
-toggleZone('chk-hijau',  'icon-hijau',  layerHijau);
-toggleZone('chk-kuning', 'icon-kuning', layerKuning);
-toggleZone('chk-merah',  'icon-merah',  layerMerah);
+document.getElementById('chk-hijau').addEventListener('change', function(e) {
+    if(e.target.checked) { map.addLayer(layerHijau); } else { map.removeLayer(layerHijau); }
+});
+
+document.getElementById('chk-kuning').addEventListener('change', function(e) {
+    if(e.target.checked) { map.addLayer(layerKuning); } else { map.removeLayer(layerKuning); }
+});
+
+document.getElementById('chk-merah').addEventListener('change', function(e) {
+    if(e.target.checked) { map.addLayer(layerMerah); } else { map.removeLayer(layerMerah); }
+});
 
 // =======================
 // LAYER CONTROL & AUTO CENTER
